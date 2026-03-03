@@ -1,0 +1,28 @@
+{
+  "name": "aws-vpc-cdk-template",
+  "version": "1.0.0",
+  "description": "AWS CDK template for VPC deployment with public and private subnets",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "cdk": "cdk",
+    "synth": "cdk synth",
+    "deploy": "cdk deploy --all",
+    "diff": "cdk diff",
+    "destroy": "cdk destroy --all"
+  },
+  "keywords": ["aws", "cdk", "vpc", "cloudformation"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "aws-cdk": "^2.100.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.100.0",
+    "constructs": "^10.0.0",
+    "source-map-support": "^0.5.21"
+  }
+}
