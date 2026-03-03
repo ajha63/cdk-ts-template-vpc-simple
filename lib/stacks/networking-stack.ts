@@ -6,7 +6,7 @@ import { VpcConfig, TagConfig } from '../config/types';
 
 export interface NetworkingStackProps extends cdk.StackProps {
   config: VpcConfig;
-  tags: TagConfig;
+  resourceTags: TagConfig;
 }
 
 export class NetworkingStack extends cdk.Stack {
@@ -19,7 +19,7 @@ export class NetworkingStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: NetworkingStackProps) {
     super(scope, id, props);
 
-    const { config, tags } = props;
+    const { config, resourceTags } = props;
     const resourcePrefix = `${config.environment}-vpc`;
 
     // Crear VPC sin subnets automáticas
@@ -35,17 +35,17 @@ export class NetworkingStack extends cdk.Stack {
 
     // Aplicar tags a la VPC
     cdk.Tags.of(this.vpc).add('Name', `${resourcePrefix}-main`);
-    cdk.Tags.of(this.vpc).add('Ambiente', tags.Ambiente);
-    cdk.Tags.of(this.vpc).add('Equipo', tags.Equipo);
-    cdk.Tags.of(this.vpc).add('CentroDeCostos', tags.CentroDeCostos);
+    cdk.Tags.of(this.vpc).add('Ambiente', resourceTags.Ambiente);
+    cdk.Tags.of(this.vpc).add('Equipo', resourceTags.Equipo);
+    cdk.Tags.of(this.vpc).add('CentroDeCostos', resourceTags.CentroDeCostos);
 
     // Internet Gateway
     const igw = new ec2.CfnInternetGateway(this, 'InternetGateway', {
       tags: [
         { key: 'Name', value: `${resourcePrefix}-igw` },
-        { key: 'Ambiente', value: tags.Ambiente },
-        { key: 'Equipo', value: tags.Equipo },
-        { key: 'CentroDeCostos', value: tags.CentroDeCostos },
+        { key: 'Ambiente', value: resourceTags.Ambiente },
+        { key: 'Equipo', value: resourceTags.Equipo },
+        { key: 'CentroDeCostos', value: resourceTags.CentroDeCostos },
       ],
     });
 
@@ -80,9 +80,9 @@ export class NetworkingStack extends cdk.Stack {
         });
 
         cdk.Tags.of(publicSubnet).add('Name', `${resourcePrefix}-public-${azSuffix}-${i + 1}`);
-        cdk.Tags.of(publicSubnet).add('Ambiente', tags.Ambiente);
-        cdk.Tags.of(publicSubnet).add('Equipo', tags.Equipo);
-        cdk.Tags.of(publicSubnet).add('CentroDeCostos', tags.CentroDeCostos);
+        cdk.Tags.of(publicSubnet).add('Ambiente', resourceTags.Ambiente);
+        cdk.Tags.of(publicSubnet).add('Equipo', resourceTags.Equipo);
+        cdk.Tags.of(publicSubnet).add('CentroDeCostos', resourceTags.CentroDeCostos);
 
         this.publicSubnets.push(publicSubnet);
       }
@@ -98,9 +98,9 @@ export class NetworkingStack extends cdk.Stack {
       });
 
       cdk.Tags.of(privateAppSubnet).add('Name', `${resourcePrefix}-private-app-${azSuffix}`);
-      cdk.Tags.of(privateAppSubnet).add('Ambiente', tags.Ambiente);
-      cdk.Tags.of(privateAppSubnet).add('Equipo', tags.Equipo);
-      cdk.Tags.of(privateAppSubnet).add('CentroDeCostos', tags.CentroDeCostos);
+      cdk.Tags.of(privateAppSubnet).add('Ambiente', resourceTags.Ambiente);
+      cdk.Tags.of(privateAppSubnet).add('Equipo', resourceTags.Equipo);
+      cdk.Tags.of(privateAppSubnet).add('CentroDeCostos', resourceTags.CentroDeCostos);
 
       this.privateAppSubnets.push(privateAppSubnet);
 
@@ -115,9 +115,9 @@ export class NetworkingStack extends cdk.Stack {
       });
 
       cdk.Tags.of(privateDbSubnet).add('Name', `${resourcePrefix}-private-db-${azSuffix}`);
-      cdk.Tags.of(privateDbSubnet).add('Ambiente', tags.Ambiente);
-      cdk.Tags.of(privateDbSubnet).add('Equipo', tags.Equipo);
-      cdk.Tags.of(privateDbSubnet).add('CentroDeCostos', tags.CentroDeCostos);
+      cdk.Tags.of(privateDbSubnet).add('Ambiente', resourceTags.Ambiente);
+      cdk.Tags.of(privateDbSubnet).add('Equipo', resourceTags.Equipo);
+      cdk.Tags.of(privateDbSubnet).add('CentroDeCostos', resourceTags.CentroDeCostos);
 
       this.privateDbSubnets.push(privateDbSubnet);
     });
@@ -133,7 +133,7 @@ export class NetworkingStack extends cdk.Stack {
     });
 
     // Crear NAT Instances (apagadas por defecto)
-    this.createNatInstances(config, tags, resourcePrefix);
+    this.createNatInstances(config, resourceTags, resourcePrefix);
 
     // Outputs
     new cdk.CfnOutput(this, 'VpcId', {

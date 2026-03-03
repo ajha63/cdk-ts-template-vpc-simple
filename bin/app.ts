@@ -24,7 +24,7 @@ const tags = getTagConfig(environment);
 // Stack de Networking
 const networkingStack = new NetworkingStack(app, `${environment}-networking-stack`, {
   config,
-  tags,
+  resourceTags: tags,
   env: {
     account: process.env.CDK_DEFAULT_ACCOUNT,
     region: config.region,
@@ -36,7 +36,7 @@ const networkingStack = new NetworkingStack(app, `${environment}-networking-stac
 const securityGroupsStack = new SecurityGroupsStack(app, `${environment}-security-groups-stack`, {
   vpc: networkingStack.vpc,
   config,
-  tags,
+  resourceTags: tags,
   env: {
     account: process.env.CDK_DEFAULT_ACCOUNT,
     region: config.region,

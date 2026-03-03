@@ -6,7 +6,7 @@ import { VpcConfig, TagConfig } from '../config/types';
 export interface SecurityGroupsStackProps extends cdk.StackProps {
   vpc: ec2.IVpc;
   config: VpcConfig;
-  tags: TagConfig;
+  resourceTags: TagConfig;
 }
 
 export class SecurityGroupsStack extends cdk.Stack {
@@ -19,7 +19,7 @@ export class SecurityGroupsStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: SecurityGroupsStackProps) {
     super(scope, id, props);
 
-    const { vpc, config, tags } = props;
+    const { vpc, config, resourceTags } = props;
     const resourcePrefix = `${config.environment}-sg`;
 
     // Security Group para ALB (HTTP/HTTPS desde internet)
@@ -42,9 +42,9 @@ export class SecurityGroupsStack extends cdk.Stack {
     );
 
     cdk.Tags.of(this.albSecurityGroup).add('Name', `${resourcePrefix}-alb`);
-    cdk.Tags.of(this.albSecurityGroup).add('Ambiente', tags.Ambiente);
-    cdk.Tags.of(this.albSecurityGroup).add('Equipo', tags.Equipo);
-    cdk.Tags.of(this.albSecurityGroup).add('CentroDeCostos', tags.CentroDeCostos);
+    cdk.Tags.of(this.albSecurityGroup).add('Ambiente', resourceTags.Ambiente);
+    cdk.Tags.of(this.albSecurityGroup).add('Equipo', resourceTags.Equipo);
+    cdk.Tags.of(this.albSecurityGroup).add('CentroDeCostos', resourceTags.CentroDeCostos);
 
     // Security Group para instancias web en subnets públicas
     this.webSecurityGroup = new ec2.SecurityGroup(this, 'WebSecurityGroup', {
@@ -66,9 +66,9 @@ export class SecurityGroupsStack extends cdk.Stack {
     );
 
     cdk.Tags.of(this.webSecurityGroup).add('Name', `${resourcePrefix}-web`);
-    cdk.Tags.of(this.webSecurityGroup).add('Ambiente', tags.Ambiente);
-    cdk.Tags.of(this.webSecurityGroup).add('Equipo', tags.Equipo);
-    cdk.Tags.of(this.webSecurityGroup).add('CentroDeCostos', tags.CentroDeCostos);
+    cdk.Tags.of(this.webSecurityGroup).add('Ambiente', resourceTags.Ambiente);
+    cdk.Tags.of(this.webSecurityGroup).add('Equipo', resourceTags.Equipo);
+    cdk.Tags.of(this.webSecurityGroup).add('CentroDeCostos', resourceTags.CentroDeCostos);
 
     // Security Group para aplicaciones en subnets privadas
     this.appSecurityGroup = new ec2.SecurityGroup(this, 'AppSecurityGroup', {
@@ -90,9 +90,9 @@ export class SecurityGroupsStack extends cdk.Stack {
     );
 
     cdk.Tags.of(this.appSecurityGroup).add('Name', `${resourcePrefix}-app`);
-    cdk.Tags.of(this.appSecurityGroup).add('Ambiente', tags.Ambiente);
-    cdk.Tags.of(this.appSecurityGroup).add('Equipo', tags.Equipo);
-    cdk.Tags.of(this.appSecurityGroup).add('CentroDeCostos', tags.CentroDeCostos);
+    cdk.Tags.of(this.appSecurityGroup).add('Ambiente', resourceTags.Ambiente);
+    cdk.Tags.of(this.appSecurityGroup).add('Equipo', resourceTags.Equipo);
+    cdk.Tags.of(this.appSecurityGroup).add('CentroDeCostos', resourceTags.CentroDeCostos);
 
     // Security Group para SSH en instancias privadas
     this.sshSecurityGroup = new ec2.SecurityGroup(this, 'SshSecurityGroup', {
@@ -109,9 +109,9 @@ export class SecurityGroupsStack extends cdk.Stack {
     );
 
     cdk.Tags.of(this.sshSecurityGroup).add('Name', `${resourcePrefix}-ssh`);
-    cdk.Tags.of(this.sshSecurityGroup).add('Ambiente', tags.Ambiente);
-    cdk.Tags.of(this.sshSecurityGroup).add('Equipo', tags.Equipo);
-    cdk.Tags.of(this.sshSecurityGroup).add('CentroDeCostos', tags.CentroDeCostos);
+    cdk.Tags.of(this.sshSecurityGroup).add('Ambiente', resourceTags.Ambiente);
+    cdk.Tags.of(this.sshSecurityGroup).add('Equipo', resourceTags.Equipo);
+    cdk.Tags.of(this.sshSecurityGroup).add('CentroDeCostos', resourceTags.CentroDeCostos);
 
     // Security Group para RDS
     this.rdsSecurityGroup = new ec2.SecurityGroup(this, 'RdsSecurityGroup', {
@@ -133,9 +133,9 @@ export class SecurityGroupsStack extends cdk.Stack {
     );
 
     cdk.Tags.of(this.rdsSecurityGroup).add('Name', `${resourcePrefix}-rds`);
-    cdk.Tags.of(this.rdsSecurityGroup).add('Ambiente', tags.Ambiente);
-    cdk.Tags.of(this.rdsSecurityGroup).add('Equipo', tags.Equipo);
-    cdk.Tags.of(this.rdsSecurityGroup).add('CentroDeCostos', tags.CentroDeCostos);
+    cdk.Tags.of(this.rdsSecurityGroup).add('Ambiente', resourceTags.Ambiente);
+    cdk.Tags.of(this.rdsSecurityGroup).add('Equipo', resourceTags.Equipo);
+    cdk.Tags.of(this.rdsSecurityGroup).add('CentroDeCostos', resourceTags.CentroDeCostos);
 
     // Outputs
     new cdk.CfnOutput(this, 'AlbSecurityGroupId', {
